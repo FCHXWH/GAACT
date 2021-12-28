@@ -2,10 +2,11 @@
 ## Prerequisities
 
 ### Ubuntu
+1. Install Berkely ABC;
 
-1. Install the lastest linux Gurobi 9.5;
+2. Install the lastest linux Gurobi 9.5;
 
-2. Install the library **Jsoncpp**:
+3. Install the library **Jsoncpp**:
 
     Download the source codes of **Jsoncpp**
     ```bash
@@ -21,5 +22,30 @@
     make
     ```
 
+4. Install the simulator:
+    
+    Download the source codes of **simulator**
+    ```bash
+    git clone https://github.com/changmg/simulator.git
+    ```
+    
+    Compile
+    ```bash
+    cd simulator/
+    mkdir build
+    cd build
+    cmake ..
+    make -j16
+    cd ..
+    ```
+    
+5. Install Python HDL library **MyHDL**:
+
+    Download this lib in python
+    ```bash
+    pip install Myhdl
+    ```
+    
+    
 
 
