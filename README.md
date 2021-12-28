@@ -7,11 +7,11 @@
 
 2. Install the library **Jsoncpp**:
 
-(i). Download the source codes of **Jsoncpp**
+Download the source codes of **Jsoncpp**
 ```bash
 git clone https://github.com/open-source-parsers/jsoncpp/tree/0.y.z;
 ```
-(ii). Compile
+Compile
 ```bash
 unzip jsoncpp-0.y.z.zip
 cd jsoncpp-0.y.z
