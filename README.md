@@ -46,6 +46,10 @@
     pip install Myhdl
     ```
     
+### TBD
+1. Further optimize the storage of genes;
+2. Combine the EE (Exploration-Exploitation) trade-off with the **Selection** operator in GA;
+3. Further improve the accuracy of error estimation.
     
 
 
