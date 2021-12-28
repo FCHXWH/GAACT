@@ -1,7 +1,10 @@
 # GAACT: Genetic Algorithm for Approximate Compressor Tree 
 ## Prerequisities
+
 ### Ubuntu
-1. Install the lastest linux Gurobi 9.5:
+
+1. Install the lastest linux Gurobi 9.5;
+
 2. Install the library **Jsoncpp**:
 (i). 
 ```bash
