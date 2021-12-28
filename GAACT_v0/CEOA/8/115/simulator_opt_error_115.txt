@@ -1,0 +1,7 @@
+Runtime of GA : 3.875s
+Error bound : 115
+Analytical error of opt1 : 110.125	Analytical error of opt2 : 264.72
+============================================================
+ER = 0.500999
+MED = 282.492
+RMED = 0.0163949
