@@ -23,6 +23,7 @@ using namespace std;
 //        assert(ActMan.Populations[i].fitness <= ActMan.Populations[i + 1].fitness);*/
 //}
 
+// combine the UCB algorithm to improve the selection operator of GA algorithm
 void GA_GeneSort(ACT_Man_t& ActMan, Gene gnew)
 {
     ActMan.Populations[ActMan.nGenes] = gnew;
