@@ -135,10 +135,12 @@ int main(int argc, char* argv[])
 		f << "Weight : " << Par.Weight << endl;
 	f << "Analytical error of opt1 : " << Opt1_Analyzed_Error << "\t" << "Analytical error of opt2 : " << Opt2_Analyzed_Error << endl;
 	f << "============================================================" << endl;
-	system("python --version");
+	cout << endl << "================Generate verilog files by Myhdl=================" << endl;
 	system(("python " + Par.json_path + "ApproxMULT_MyHDL.py " + Par.log_path + Par.json_filename + " ILP_ApproxMult " + Par.log_path + Par.log_filename + " " + to_string(Par.MULT_SIZE) + " " + to_string(Par.simulator_approach)).c_str());
+	cout << endl << "================Convert verilog files to .blif files by Yosys=================" << endl;
 	string command_yosys = "yosys -p \"read_verilog Multiplier_KoggeStone.v; synth; write_blif " + Par.log_path + "Multiplier_KoggeStone.blif;\"";
 	system(command_yosys.c_str());
+	cout << endl << "================Hardware simulation=================" << endl;
 	string command_simulator = "simulator.out -a " + Par.cmp_path + to_string(Par.MULT_SIZE) + ".blif " + "-b " + Par.log_path + "Multiplier_KoggeStone.blif -f " + Par.log_path + Par.log_filename;
 	system(command_simulator.c_str());
 	f.close();
