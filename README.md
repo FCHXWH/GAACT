@@ -46,7 +46,7 @@
     pip install Myhdl
     ```
     
-### TBD
+## TBD
 - [x] Further optimize the storage of genes;
 - [x] Combine the EE (Exploration-Exploitation) trade-off with the **Selection** operator in GA;
 - [ ] Implement NSGA-II algorithm to co-optimize the delay and error of approximate CT;
