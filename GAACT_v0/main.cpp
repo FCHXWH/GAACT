@@ -120,6 +120,7 @@ int main(int argc, char* argv[])
 	double fitness = best_gene.fitness;
 	cout << "After " << ActMan.Pars.nGenerations << " iterations: " << endl;
 	cout << "the best gene's fitness is: " << fitness << endl;*/
+
 	// start to translate Gene to HDL
 	vector<vector<column_sol_t>> ColSols = GA2ColSol(best_gene, ActMan.Pars);
 	WriteToJson(ColSols, Par.log_path + Par.json_filename);
