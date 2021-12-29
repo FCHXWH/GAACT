@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 	init_Pars(argc, argv, Par);
 	cout << getenv("GUROBI_HOME") << endl;
 	system(("mkdir -p " + Par.log_path).c_str());
-	//optimization process
+	//first optimization step: compressors allocation
 	try {
 		/*******Set up environment******/
 		GRBEnv env = GRBEnv();
