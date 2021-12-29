@@ -5,11 +5,14 @@
 #include <vector>
 #include <algorithm>
 #include "Multiplier_Tree_Optimization.h"
+#include <unordered_map>
 using namespace std;
 typedef struct ACT_Par_t_ ACT_Par_t;
 typedef struct ACT_Man_t_ ACT_Man_t;
 typedef struct Gene_t Gene;
 typedef struct Perm_t Perm;
+typedef struct HashFunc_t HashFunc;
+typedef struct EqualFunc_t EqualFunc;
 //typedef vector<vector<vector<int>>> Gene;
 
 struct ACT_Par_t_
@@ -22,6 +25,7 @@ struct ACT_Par_t_
 	vector<vector<vector<int>>> nCompressors; // size: nStages; 
 											  // {{{n22,n32,nA32,nA42}}}
 	int BitWidth;
+	int counter = 0;
 };
 
 struct Perm_t
@@ -44,6 +48,24 @@ struct Perm_t
 		for (auto it : perm)
 			cout << it;
 	}
+	int Signature()
+	{
+		int usign = 0;
+		int num = perm.size();
+		int permutation = 1;
+		for (int i = perm.size() - 2; i >= 0; i--)
+		{
+			int cur_num = perm[i], lex = cur_num;
+			for (auto it = perm.begin(); *it != cur_num; it++)
+			{
+				if (*it < cur_num)
+					lex--;
+			}
+			permutation *= perm.size() - i - 1;
+			usign += permutation * lex;
+		}
+		return usign;
+	}
 };
 
 struct Gene_t
@@ -51,7 +73,10 @@ struct Gene_t
 	vector<Perm> g;
 	int nPerms;
 	//vector<vector<vector<int>>> g;
+	int nRecord;
 	double fitness;
+	double fitness_UCB;
+	vector<int> usigns;
 	Gene_t()
 	{
 		g = {};
@@ -61,14 +86,22 @@ struct Gene_t
 	Gene_t(ACT_Par_t Pars)
 	{
 		nPerms = Pars.geneShape.size() * Pars.geneShape[0].size();
-		g.resize(nPerms);
+		g.resize(nPerms); usigns.resize(nPerms);
 		for (int i = 0; i < g.size(); i++)
 		{
 			int iStage = i / Pars.geneShape[0].size();
 			int iColumn = i % Pars.geneShape[0].size();
 			int PermSize = Pars.geneShape[iStage][iColumn];
-			g[i] = Perm(PermSize);
+			g[i] = Perm(PermSize);	
 		}
+		Gene_Sign();
+	}
+
+	void Gene_Sign()
+	{
+		for (int i = 0; i < usigns.size(); i++)
+			usigns[i] = g[i].Signature();
+
 	}
 
 	void show(ACT_Par_t Pars)
@@ -92,9 +125,34 @@ struct Gene_t
 	}
 };
 
+struct HashFunc_t
+{
+	size_t operator() (const vector<int>& key) const {
+		std::hash<int> hasher;
+		size_t seed = 0;
+		for (int i : key) {
+			seed ^= hasher(i) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		}
+		return seed;
+	}
+};
+
+//struct Equalfunc_t {
+//	bool operator() (vector<int> const& a, vector<int> const& b) const {
+//		for (int i = 0; i < a.size(); i++)
+//		{
+//			if (a[i] != b[i])
+//				return 0;
+//		}
+//		return 1;
+//	}
+//};
+
 struct ACT_Man_t_
 {
 	ACT_Par_t Pars;
+	unordered_map<vector<int>, int, HashFunc> Gene_RecordTable_Populations;
+	unordered_map<vector<int>, int, HashFunc> Gene_RecordTable;
 	vector<Gene> Populations;
 	int nGenes;
 	ACT_Man_t_()

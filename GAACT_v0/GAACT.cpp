@@ -7,12 +7,28 @@
 #include <algorithm>
 #include "GAACT.h"
 using namespace std;
+//void GA_GeneSort(ACT_Man_t& ActMan, Gene gnew)
+//{
+//    ActMan.Populations[ActMan.nGenes] = gnew;
+//    for (int i = ActMan.nGenes - 1; i >= 0; i--)
+//    {
+//        if (gnew.fitness >= ActMan.Populations[i].fitness)
+//            break;
+//        ActMan.Populations[i + 1] = ActMan.Populations[i];
+//        ActMan.Populations[i] = gnew;
+//    }
+//    if (ActMan.nGenes < ActMan.Pars.nPopulations)
+//        ActMan.nGenes++;
+//    /*for (int i = 0; i < ActMan.nGenes - 1; i++)
+//        assert(ActMan.Populations[i].fitness <= ActMan.Populations[i + 1].fitness);*/
+//}
+
 void GA_GeneSort(ACT_Man_t& ActMan, Gene gnew)
 {
     ActMan.Populations[ActMan.nGenes] = gnew;
     for (int i = ActMan.nGenes - 1; i >= 0; i--)
     {
-        if (gnew.fitness >= ActMan.Populations[i].fitness)
+        if (gnew.fitness_UCB >= ActMan.Populations[i].fitness_UCB)
             break;
         ActMan.Populations[i + 1] = ActMan.Populations[i];
         ActMan.Populations[i] = gnew;
@@ -123,17 +139,25 @@ double ComputeAnalyticMED(Gene& g, ACT_Par_t Pars)
         }
         z_cur = z_next;
     }
+    g.fitness_UCB = g.fitness - sqrt(double(2) * double(log(Pars.counter)) / g.nRecord);
 }
 
 ACT_Man_t initialization(ACT_Par_t Pars)
 {
     ACT_Man_t ActMan(Pars);
+    ActMan.Pars.counter++;
     // initialize the first population
     for (int i = 0; i < ActMan.Pars.nPopulations; i++)
     {
         Gene g_new = Gene(ActMan.Pars);
-        ComputeAnalyticMED(g_new, Pars);
-        GA_GeneSort(ActMan, g_new);
+        if (!ActMan.Gene_RecordTable[g_new.usigns])
+        {
+            ActMan.Gene_RecordTable[g_new.usigns] = 1;
+            ActMan.Gene_RecordTable_Populations[g_new.usigns] += 1;
+            g_new.nRecord = ActMan.Gene_RecordTable_Populations[g_new.usigns];
+            ComputeAnalyticMED(g_new, Pars);
+            GA_GeneSort(ActMan, g_new);
+        }
         /*ActMan.Populations[i].show(Pars);
         cout << "Fitness is : " << ActMan.Populations[i].fitness << endl;*/
     }
@@ -187,10 +211,24 @@ void crossover(ACT_Man_t& ActMan)
             mother.g[j].perm = permu2;
         
         }
+        father.Gene_Sign(); mother.Gene_Sign();
         // compute the new two genes' fitness
-        ComputeAnalyticMED(father, ActMan.Pars);
-        ComputeAnalyticMED(mother, ActMan.Pars);
-        GA_GeneSort(ActMan, father); GA_GeneSort(ActMan, mother);
+        if (!ActMan.Gene_RecordTable[father.usigns])
+        {
+            ActMan.Gene_RecordTable[father.usigns] = 1;
+            ActMan.Gene_RecordTable_Populations[father.usigns] += 1;
+            father.nRecord = ActMan.Gene_RecordTable_Populations[father.usigns];
+            ComputeAnalyticMED(father, ActMan.Pars);
+            GA_GeneSort(ActMan, father);
+        }
+        if (!ActMan.Gene_RecordTable[mother.usigns])
+        {
+            ActMan.Gene_RecordTable[mother.usigns] = 1;
+            ActMan.Gene_RecordTable_Populations[mother.usigns] += 1;
+            mother.nRecord = ActMan.Gene_RecordTable_Populations[mother.usigns];
+            ComputeAnalyticMED(mother, ActMan.Pars);
+            GA_GeneSort(ActMan, mother);
+        }
     }
 }
 
@@ -212,7 +250,14 @@ void mutation(ACT_Man_t& ActMan)
                 permu[b1] = permu[b2]; permu[b2] = tmp;
             }
         }
-        ComputeAnalyticMED(g, ActMan.Pars);
-        GA_GeneSort(ActMan, g);
+        g.Gene_Sign();
+        if (!ActMan.Gene_RecordTable[g.usigns])
+        {
+            ActMan.Gene_RecordTable[g.usigns] = 1;
+            ActMan.Gene_RecordTable_Populations[g.usigns] += 1;
+            g.nRecord = ActMan.Gene_RecordTable_Populations[g.usigns];
+            ComputeAnalyticMED(g, ActMan.Pars);
+            GA_GeneSort(ActMan, g);
+        }
     }
 }

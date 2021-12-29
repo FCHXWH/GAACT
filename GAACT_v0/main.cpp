@@ -98,13 +98,19 @@ int main(int argc, char* argv[])
 	clock_t start, finish;
 	double totaltime;
 	start = clock();
+	ActPar.counter++;
 	ACT_Man_t ActMan = initialization(ActPar);
+	ActMan.Gene_RecordTable.clear();
 	for (int i = 0; i < ActPar.nGenerations; i++)
 	{
+		ActMan.Pars.counter++;
 		crossover(ActMan);
 		mutation(ActMan);
 		cout << "After " << i << " iterations: " << endl;
 		cout << "the best gene's fitness is: " << ActMan.Populations[0].fitness << endl;
+		cout << "the best gene's UCB fitness is: " << ActMan.Populations[0].fitness_UCB << endl;
+		cout << "the best gene's recorded time is: " << ActMan.Gene_RecordTable_Populations[ActMan.Populations[0].usigns] << endl;
+		ActMan.Gene_RecordTable.clear();
 	}
 	finish = clock();
 	totaltime = double(finish - start) / CLOCKS_PER_SEC;
