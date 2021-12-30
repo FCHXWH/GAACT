@@ -46,6 +46,12 @@
     pip install Myhdl
     ```
 
+6. Install the verilog generator:
+
+    Download the source codes of **ApproxMult_Myhdl**:
+    ```bash
+    git clone https://github.com/FCHXWH/ApproxMULT_MyHDL.git
+    ```
 ## What we have done
 - Encoding a connection order as a gene through **Permutation Encoding**;
 - Define the self-designed crossover, mutation operators, which are easy to be parallelized;
