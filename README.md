@@ -45,11 +45,21 @@
     ```bash
     pip install Myhdl
     ```
-    
+
+## What we have done
+- Encoding a connection order as a gene through **Permutation Encoding**;
+- Define the self-designed crossover, mutation operators, which are easy to be parallelized;
+- Learn from the implementation of **priority cuts** in **Berkely ABC**:
+    1. Implement the incremental sorting function to accelerate the selection operator;
+    2. Assign a signature for each gene;
+    3. Set up a hash table for each population to prune the repeated genes to optimize the memory management;
+- Set up a global hash table to record the times of each gene, which is the key of UCB algorithm.
+
 ## TBD
-- [x] Further optimize the storage of genes;
+- [x] Further optimize the memory management of genes;
 - [x] Combine the EE (Exploration-Exploitation) trade-off with the **Selection** operator in GA;
 - [ ] Implement NSGA-II algorithm to co-optimize the delay and error of approximate CT;
+- [ ] Further parallelize GA operations: crossover, mutation, etc; 
 - [ ] Further improve the accuracy of error estimation.
     
 
